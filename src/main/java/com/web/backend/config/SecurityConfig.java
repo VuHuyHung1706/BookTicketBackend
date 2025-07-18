@@ -12,16 +12,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final String[] PUBLIC_POST_ENDPOINTS = {
-            "/accounts/register", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh",
+            "/accounts/register", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/actors/**", "/genres/**" ,
     };
 
     private final String[] PUBLIC_GET_ENDPOINTS = {
+            "/movies/**", "/cinemas/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v3/api-docs/**",
@@ -37,9 +44,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS)
+                            .requestMatchers(PUBLIC_POST_ENDPOINTS)
                             .permitAll()
                             .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS)
                             .permitAll()
@@ -54,6 +62,20 @@ public class SecurityConfig {
 
         return httpSecurity.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://10.0.2.2:8080"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
