@@ -1,0 +1,158 @@
+package com.web.backend.service.showtime;
+
+import com.web.backend.dto.request.showtime.ShowtimeRequest;
+import com.web.backend.dto.response.seat.SeatResponse;
+import com.web.backend.dto.response.showtime.ShowtimeResponse;
+import com.web.backend.entity.*;
+import com.web.backend.exception.AppException;
+import com.web.backend.exception.ErrorCode;
+import com.web.backend.mapper.SeatMapper;
+import com.web.backend.mapper.ShowtimeMapper;
+import com.web.backend.repository.*;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@Transactional
+public class ShowtimeServiceImpl implements ShowtimeService {
+
+    @Autowired
+    private ShowtimeRepository showtimeRepository;
+
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private SeatRepository seatRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private ShowtimeMapper showtimeMapper;
+
+    @Autowired
+    private SeatMapper seatMapper;
+
+    @Override
+    public List<ShowtimeResponse> getAllShowtimes() {
+        return showtimeRepository.findAll()
+                .stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ShowtimeResponse getShowtimeById(Integer id) {
+        Showtime showtime = showtimeRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_EXISTED));
+        return showtimeMapper.toShowtimeResponse(showtime);
+    }
+
+    @Override
+    public ShowtimeResponse createShowtime(ShowtimeRequest request) {
+        Movie movie = movieRepository.findById(request.getMovieId())
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
+
+        Room room = roomRepository.findById(request.getRoomId())
+                .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
+
+            // Calculate end time based on movie duration
+        LocalDateTime endTime = request.getStartTime().plusMinutes(movie.getDuration());
+
+        // Check for conflicting showtimes in the same room
+        List<Showtime> conflictingShowtimes = showtimeRepository.findConflictingShowtimes(
+                request.getRoomId(), request.getStartTime(), endTime);
+
+        if (!conflictingShowtimes.isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_KEY); // You might want to create a specific error for this
+        }
+
+        Showtime showtime = showtimeMapper.toShowtime(request);
+        showtime.setEndTime(endTime);
+
+        showtime = showtimeRepository.save(showtime);
+        return showtimeMapper.toShowtimeResponse(showtime);
+    }
+
+    @Override
+    public ShowtimeResponse updateShowtime(Integer id, ShowtimeRequest request) {
+        Showtime showtime = showtimeRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_EXISTED));
+
+        // Validate movie exists
+        Movie movie = movieRepository.findById(request.getMovieId())
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_EXISTED));
+
+        // Validate room exists
+        if (!roomRepository.existsById(request.getRoomId())) {
+            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
+        }
+
+        // Calculate end time based on movie duration
+        LocalDateTime endTime = request.getStartTime().plusMinutes(movie.getDuration());
+
+        // Check for conflicting showtimes in the same room (excluding current showtime)
+        List<Showtime> conflictingShowtimes = showtimeRepository.findConflictingShowtimes(
+                request.getRoomId(), request.getStartTime(), endTime);
+
+        conflictingShowtimes = conflictingShowtimes.stream()
+                .filter(s -> !s.getId().equals(id))
+                .collect(Collectors.toList());
+
+        if (!conflictingShowtimes.isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_KEY);
+        }
+
+        showtimeMapper.updateShowtime(showtime, request);
+        showtime.setEndTime(endTime);
+
+        showtime = showtimeRepository.save(showtime);
+        return showtimeMapper.toShowtimeResponse(showtime);
+    }
+
+    @Override
+    public void deleteShowtime(Integer id) {
+        if (!showtimeRepository.existsById(id)) {
+            throw new AppException(ErrorCode.SHOWTIME_NOT_EXISTED);
+        }
+        showtimeRepository.deleteById(id);
+    }
+
+
+    @Override
+    public List<SeatResponse> getAvailableSeats(Integer showtimeId) {
+        Showtime showtime = showtimeRepository.findById(showtimeId)
+                .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_EXISTED));
+
+        // Get all seats in the room
+        List<Seat> allSeats = seatRepository.findByRoomIdOrderByName(showtime.getRoomId());
+
+        // Get booked seats for this showtime
+        List<Ticket> bookedTickets = ticketRepository.findByShowtimeIdAndStatus(showtimeId, true);
+        List<Integer> bookedSeatIds = bookedTickets.stream()
+                .map(Ticket::getSeatId)
+                .collect(Collectors.toList());
+
+        // Filter available seats
+        List<Seat> availableSeats = allSeats.stream()
+                .filter(seat -> !bookedSeatIds.contains(seat.getId()))
+                .collect(Collectors.toList());
+
+        return availableSeats.stream()
+                .map(seatMapper::toSeatResponse)
+                .collect(Collectors.toList());
+    }
+
+
+}

@@ -4,11 +4,14 @@ import com.web.backend.dto.request.*;
 import com.web.backend.dto.response.*;
 import com.web.backend.entity.Account;
 import com.web.backend.entity.Customer;
+import com.web.backend.entity.Manager;
 import com.web.backend.exception.AppException;
 import com.web.backend.exception.ErrorCode;
 import com.web.backend.mapper.CustomerMapper;
+import com.web.backend.mapper.ManagerMapper;
 import com.web.backend.repository.AccountRepository;
 import com.web.backend.repository.CustomerRepository;
+import com.web.backend.repository.ManagerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,10 +29,16 @@ public class AccountServiceImpl implements AccountService {
     private CustomerRepository customerRepository;
 
     @Autowired
+    private ManagerRepository managerRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private ManagerMapper managerMapper;
 
     @Override
     public CustomerResponse registerUser(UserRegistrationRequest request) {
@@ -97,5 +106,15 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return customerMapper.toCustomerResponse(customer);
+    }
+
+    @Override
+    public ManagerResponse getManager() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Manager manager = managerRepository.findByAccountUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return managerMapper.toManagerResponse(manager);
     }
 }

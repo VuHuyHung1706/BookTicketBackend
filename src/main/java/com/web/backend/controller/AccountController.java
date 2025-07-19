@@ -5,6 +5,7 @@ import com.web.backend.dto.response.*;
 import com.web.backend.service.account.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,10 +37,17 @@ public class AccountController {
                 .build();
     }
 
-    @GetMapping("/profile")
+    @GetMapping("customer/profile")
     public ApiResponse<CustomerResponse> getMyProfile() {
         return ApiResponse.<CustomerResponse>builder()
                 .result(accountService.getMyProfile())
+                .build();
+    }
+
+    @GetMapping("manager/profile")
+    public ApiResponse<ManagerResponse> getManagerProfile() {
+        return ApiResponse.<ManagerResponse>builder()
+                .result(accountService.getManager())
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.web.backend.entity;
 
-import com.web.backend.constant.TicketStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,10 +28,9 @@ public class Ticket {
     @Column(name = "price")
     private Integer price;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     @Builder.Default
-    private TicketStatus status = TicketStatus.BOOKED;
+    private Boolean status = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "showtime_id", referencedColumnName = "id", insertable = false, updatable = false)

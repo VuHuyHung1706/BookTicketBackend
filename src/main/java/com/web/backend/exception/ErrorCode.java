@@ -21,6 +21,10 @@ public enum ErrorCode {
     GENRE_NOT_EXISTED(1004, "Genre not found", HttpStatus.NOT_FOUND),
     ROOM_NOT_EXISTED(1004, "Room not found", HttpStatus.NOT_FOUND),
     CINEMA_NOT_EXISTED(1004, "Cinema not found", HttpStatus.NOT_FOUND),
+    SHOWTIME_NOT_EXISTED(1004, "Showtime not found", HttpStatus.NOT_FOUND),
+    SEAT_NOT_EXISTED(1004, "Seat not found", HttpStatus.NOT_FOUND),
+    INVOICE_NOT_EXISTED(1004, "Invoice not found", HttpStatus.NOT_FOUND),
+    TICKET_NOT_EXISTED(1004, "Ticket not found", HttpStatus.NOT_FOUND),
 
     UNAUTHENTICATED(1006, "Authentication failed", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),

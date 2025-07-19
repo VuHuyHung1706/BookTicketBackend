@@ -8,4 +8,5 @@ public interface AccountService {
     void changePassword(ChangePasswordRequest request);
     CustomerResponse updateProfile(UpdateProfileRequest request);
     CustomerResponse getMyProfile();
+    ManagerResponse getManager();
 }
