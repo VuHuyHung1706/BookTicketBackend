@@ -34,7 +34,23 @@ public enum ErrorCode {
     USERNAME_NOT_BLANK(9000, "Username cannot be blank", HttpStatus.BAD_REQUEST),
     PASSWORD_NOT_BLANK(9000, "Password cannot be blank", HttpStatus.BAD_REQUEST),
     FIRST_NAME_NOT_BLANK(9000, "First name cannot be blank", HttpStatus.BAD_REQUEST),
-    LAST_NAME_NOT_BLANK(9000, "Last name cannot be blank", HttpStatus.BAD_REQUEST);
+    LAST_NAME_NOT_BLANK(9000, "Last name cannot be blank", HttpStatus.BAD_REQUEST),
+    TITLE_NOT_BLANK(9000, "Title cannot be blank", HttpStatus.BAD_REQUEST),
+    SEAT_NAME_NOT_BLANK(9000, "Seat name cannot be blank", HttpStatus.BAD_REQUEST),
+    CINEMA_NAME_NOT_BLANK(9000, "Cinema name cannot be blank", HttpStatus.BAD_REQUEST),
+    ADDRESS_NOT_BLANK(9000, "Address cannot be blank", HttpStatus.BAD_REQUEST),
+    ROOM_NAME_NOT_BLANK(9000, "Room name cannot be blank", HttpStatus.BAD_REQUEST),
+
+    ROOM_ID_NOT_NULL(9000, "Room ID cannot be null", HttpStatus.BAD_REQUEST),
+    SHOWTIME_ID_NOT_NULL(9000, "Showtime ID cannot be null", HttpStatus.BAD_REQUEST),
+    CINEMA_ID_NOT_NULL(9000, "Cinema ID cannot be null", HttpStatus.BAD_REQUEST),
+    MOVIE_ID_NOT_NULL(9000, "Movie ID cannot be null", HttpStatus.BAD_REQUEST),
+    START_TIME_NOT_NULL(9000, "Start time cannot be null", HttpStatus.BAD_REQUEST),
+    DURATION_NOT_NULL(9000, "Duration cannot be null", HttpStatus.BAD_REQUEST),
+
+    DURATION_MIN(9000, "Duration must be at least 1 minute", HttpStatus.BAD_REQUEST),
+    TOTAL_SEATS_MIN(9000, "Total seats must be at least 1", HttpStatus.BAD_REQUEST),
+    SEAT_SELECTION_REQUIRED(9000, "At least one seat must be selected", HttpStatus.BAD_REQUEST)    ;
 
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

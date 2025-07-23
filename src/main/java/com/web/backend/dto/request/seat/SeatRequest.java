@@ -1,6 +1,7 @@
 package com.web.backend.dto.request.seat;
 
 import com.web.backend.constant.SeatType;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,10 +15,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SeatRequest {
 
-    @NotBlank(message = "Seat name cannot be blank")
+    @NotBlank(message = "SEAT_NAME_NOT_BLANK")
     private String name;
 
-    @NotNull(message = "Room ID is required")
+    private String row;
+    private Integer col;
+
+    @NotNull(message = "ROOM_ID_NOT_NULL")
     private Integer roomId;
 
     private SeatType seatType;

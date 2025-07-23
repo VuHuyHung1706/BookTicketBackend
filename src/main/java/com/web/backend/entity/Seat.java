@@ -22,6 +22,12 @@ public class Seat {
     @Column(name = "name")
     private String name; // e.g., A1, B2
 
+    @Column(name = "seat_row")
+    private String row;
+
+    @Column(name = "seat_col")
+    private Integer col;
+
     @Column(name = "room_id")
     private Integer roomId;
 

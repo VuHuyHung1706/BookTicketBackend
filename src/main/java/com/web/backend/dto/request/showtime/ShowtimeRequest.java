@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @Builder
 public class ShowtimeRequest {
 
-    @NotNull(message = "Movie ID is required")
+    @NotNull(message = "MOVIE_ID_NOT_NULL")
     private Integer movieId;
 
-    @NotNull(message = "Room ID is required")
+    @NotNull(message = "ROOM_ID_NOT_NULL")
     private Integer roomId;
 
-    @NotNull(message = "Start time is required")
+    @NotNull(message = "START_TIME_NOT_NULL")
     private LocalDateTime startTime;
 
     private Integer ticketPrice;

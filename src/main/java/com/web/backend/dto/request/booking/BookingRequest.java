@@ -15,9 +15,9 @@ import java.util.List;
 @Builder
 public class BookingRequest {
 
-    @NotNull(message = "Showtime ID is required")
+    @NotNull(message = "SHOWTIME_ID_NOT_NULL")
     private Integer showtimeId;
 
-    @NotEmpty(message = "At least one seat must be selected")
+    @NotEmpty(message = "SEAT_SELECTION_REQUIRED")
     private List<Integer> seatIds;
 }

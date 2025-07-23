@@ -1,5 +1,6 @@
 package com.web.backend.dto.request.room;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -14,13 +15,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RoomRequest {
 
-    @NotBlank(message = "Room name cannot be blank")
+    @NotBlank(message = "ROOM_NAME_NOT_BLANK")
     private String name;
 
-    @NotNull(message = "Total seats is required")
-    @Positive(message = "Total seats must be positive")
+    @Min(value = 1, message = "TOTAL_SEATS_MIN")
     private Integer totalSeats;
 
-    @NotNull(message = "Cinema ID is required")
+    @NotNull(message = "CINEMA_ID_NOT_NULL")
     private Integer cinemaId;
 }

@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CinemaRequest {
 
-    @NotBlank(message = "Cinema name cannot be blank")
+    @NotBlank(message = "CINEMA_NAME_NOT_BLANK")
     private String name;
 
-    @NotBlank(message = "Address cannot be blank")
+    @NotBlank(message = "ADDRESS_NOT_BLANK")
     private String address;
 
     private String phone;
