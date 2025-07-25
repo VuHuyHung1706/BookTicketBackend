@@ -1,4 +1,4 @@
-package com.web.backend.dto.request;
+package com.web.backend.dto.request.cinema;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.web.backend.controller;
 
-import com.web.backend.dto.request.CinemaRequest;
+import com.web.backend.dto.request.cinema.CinemaRequest;
 import com.web.backend.dto.response.ApiResponse;
 import com.web.backend.dto.response.cinema.CinemaResponse;
 import com.web.backend.service.cinema.CinemaService;

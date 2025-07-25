@@ -31,6 +31,10 @@ public enum ErrorCode {
     PERMISSION_NOT_EXISTED(1008, "Permission not found", HttpStatus.NOT_FOUND),
     USER_NOT_ACTIVE(1009, "User account is not active", HttpStatus.FORBIDDEN),
 
+    TICKET_ALREADY_SCANNED(1010, "Ticket has already been scanned", HttpStatus.BAD_REQUEST),
+    INVALID_QR_CODE(1011, "Invalid QR code", HttpStatus.BAD_REQUEST),
+    TICKET_NOT_ACTIVE(1012, "Ticket is not active", HttpStatus.BAD_REQUEST),
+
     USERNAME_NOT_BLANK(9000, "Username cannot be blank", HttpStatus.BAD_REQUEST),
     PASSWORD_NOT_BLANK(9000, "Password cannot be blank", HttpStatus.BAD_REQUEST),
     FIRST_NAME_NOT_BLANK(9000, "First name cannot be blank", HttpStatus.BAD_REQUEST),

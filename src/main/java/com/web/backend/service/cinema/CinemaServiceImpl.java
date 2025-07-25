@@ -1,6 +1,6 @@
 package com.web.backend.service.cinema;
 
-import com.web.backend.dto.request.CinemaRequest;
+import com.web.backend.dto.request.cinema.CinemaRequest;
 import com.web.backend.dto.response.cinema.CinemaResponse;
 import com.web.backend.entity.Cinema;
 import com.web.backend.exception.AppException;

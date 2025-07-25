@@ -3,6 +3,8 @@ package com.web.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "tickets")
 @Setter
@@ -31,6 +33,20 @@ public class Ticket {
     @Column(name = "status")
     @Builder.Default
     private Boolean status = false;
+
+    @Column(name = "qr_code", unique = true)
+    private String qrCode;
+
+    @Column(name = "created_at")
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "scanned_at")
+    private LocalDateTime scannedAt;
+
+    @Column(name = "is_scanned")
+    @Builder.Default
+    private Boolean isScanned = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "showtime_id", referencedColumnName = "id", insertable = false, updatable = false)

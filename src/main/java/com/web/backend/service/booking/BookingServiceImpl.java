@@ -10,6 +10,7 @@ import com.web.backend.mapper.ShowtimeMapper;
 import com.web.backend.mapper.SeatMapper;
 import com.web.backend.mapper.TicketMapper;
 import com.web.backend.repository.*;
+import com.web.backend.service.qr.QRCodeService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +45,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private TicketMapper ticketMapper;
+
+    @Autowired
+    private QRCodeService qrCodeService;
 
     @Override
     public BookingResponse bookTickets(BookingRequest request) {
@@ -90,8 +94,14 @@ public class BookingServiceImpl implements BookingService {
                     .invoiceId(invoice.getId())
                     .price(showtime.getTicketPrice())
                     .status(true) // Mark as booked
+                    .createdAt(LocalDateTime.now())
                     .build();
 
+            ticket = ticketRepository.save(ticket);
+
+            // Generate QR code for the ticket
+            String qrCode = qrCodeService.generateQRCode(ticket.getId());
+            ticket.setQrCode(qrCode);
             ticket = ticketRepository.save(ticket);
             tickets.add(ticket);
         }
