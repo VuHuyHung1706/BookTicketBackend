@@ -18,7 +18,7 @@ import java.util.Base64;
 @Service
 public class QRCodeServiceImpl implements QRCodeService {
 
-    private static final String SECRET_KEY = "MOVIE_TICKET_SECRET_2024";
+    private static final String SECRET_KEY = "TICKET_SECRET";
     private static final int QR_CODE_SIZE = 300;
 
     @Override
