@@ -23,10 +23,10 @@ public class Seat {
     private String name; // e.g., A1, B2
 
     @Column(name = "seat_row")
-    private String row;
+    private Integer seatRow;
 
-    @Column(name = "seat_col")
-    private Integer col;
+    @Column(name = "seat_column")
+    private Integer seatColumn;
 
     @Column(name = "room_id")
     private Integer roomId;

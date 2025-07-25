@@ -18,8 +18,8 @@ public class SeatRequest {
     @NotBlank(message = "SEAT_NAME_NOT_BLANK")
     private String name;
 
-    private String row;
-    private Integer col;
+    private Integer seatRow;
+    private Integer seatColumn;
 
     @NotNull(message = "ROOM_ID_NOT_NULL")
     private Integer roomId;
