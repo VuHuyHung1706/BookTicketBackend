@@ -12,9 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentRequest {
-
-    @NotNull(message = "Invoice ID is required")
     private Integer invoiceId;
-
-    private String orderInfo;
 }

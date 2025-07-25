@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentResponse {
-
     private String paymentUrl;
     private String invoiceId;
     private String amount;
-    private String orderInfo;
     private String txnRef;
 }

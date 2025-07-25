@@ -8,6 +8,7 @@ import com.web.backend.entity.Invoice;
 import com.web.backend.exception.AppException;
 import com.web.backend.exception.ErrorCode;
 import com.web.backend.repository.InvoiceRepository;
+import com.web.backend.repository.TicketRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +39,9 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
+    @Autowired
+    private TicketRepository ticketRepository;
+
     @Override
     public PaymentResponse createPayment(PaymentRequest request, HttpServletRequest httpRequest) {
         // Get invoice
@@ -66,7 +70,7 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
             vnp_Params.put("vnp_BankCode", bankCode);
         }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", request.getOrderInfo() != null ? request.getOrderInfo() : "Thanh toan ve xem phim");
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan ve xem phim");
         vnp_Params.put("vnp_OrderType", orderType);
 
         String locate = "vn";
@@ -127,7 +131,6 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
                 .paymentUrl(paymentUrl)
                 .invoiceId(request.getInvoiceId().toString())
                 .amount(String.valueOf(amount))
-                .orderInfo(request.getOrderInfo() != null ? request.getOrderInfo() : "Thanh toan ve xem phim")
                 .build();
     }
 
@@ -170,8 +173,8 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
                     invoice.setPaidAt(LocalDateTime.now());
                 } else {
                     // Payment failed
-                    invoice.setPaymentStatus(PaymentStatus.FAILED);
-                }
+                    ticketRepository.deleteAll(ticketRepository.findByInvoiceId(invoice.getId()));
+                    invoiceRepository.delete(invoice);                }
                 invoiceRepository.save(invoice);
                 return "00".equals(vnp_ResponseCode);
             }
