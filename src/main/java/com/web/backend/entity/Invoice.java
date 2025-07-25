@@ -1,8 +1,10 @@
 package com.web.backend.entity;
 
+import com.web.backend.constant.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -24,6 +26,21 @@ public class Invoice {
 
     @Column(name = "total_amount")
     private Integer totalAmount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
+    @Builder.Default
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
+    @Column(name = "vnpay_transaction_id")
+    private String vnpayTransactionId;
+
+    @Column(name = "created_at")
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "paid_at")
+    private LocalDateTime paidAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", referencedColumnName = "username", insertable = false, updatable = false)

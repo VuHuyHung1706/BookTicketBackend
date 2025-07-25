@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     List<Invoice> findByUsername(String username);
+    Invoice findByVnpayTransactionId(String vnpayTransactionId);
 }
