@@ -52,7 +52,7 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
         String vnp_Command = "pay";
         String orderType = "other";
         long amount = invoice.getTotalAmount() * 100L; // VNPay requires amount in VND * 100
-        String bankCode = "NCB";
+//        String bankCode = "NCB";
 
         String vnp_TxnRef = getRandomNumber(8);
         String vnp_IpAddr = getIpAddress(httpRequest);
@@ -66,9 +66,9 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
 
-        if (bankCode != null && !bankCode.isEmpty()) {
-            vnp_Params.put("vnp_BankCode", bankCode);
-        }
+//        if (bankCode != null && !bankCode.isEmpty()) {
+//            vnp_Params.put("vnp_BankCode", bankCode);
+//        }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan ve xem phim");
         vnp_Params.put("vnp_OrderType", orderType);
