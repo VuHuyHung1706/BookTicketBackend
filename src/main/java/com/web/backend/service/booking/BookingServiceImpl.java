@@ -127,13 +127,13 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponse getBookingById(Integer invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_EXISTED));
 
         // Get tickets for this invoice
         List<Ticket> tickets = ticketRepository.findByInvoiceId(invoiceId);
 
         if (tickets.isEmpty()) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.TICKET_NOT_EXISTED);
         }
 
         // Get showtime from first ticket (all tickets should have same showtime)

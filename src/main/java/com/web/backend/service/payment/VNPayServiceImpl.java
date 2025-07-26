@@ -131,6 +131,7 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
                 .paymentUrl(paymentUrl)
                 .invoiceId(request.getInvoiceId().toString())
                 .amount(String.valueOf(amount))
+                .txnRef(vnp_TxnRef)
                 .build();
     }
 

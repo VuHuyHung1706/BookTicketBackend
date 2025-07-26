@@ -23,8 +23,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_POST_ENDPOINTS = {
-            "/accounts/register", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/actors/**", "/genres/**" ,
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/accounts/register", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/actors/**", "/genres/**" , "/payments/**",
     };
 
     private final String[] PUBLIC_GET_ENDPOINTS = {
@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers(PUBLIC_POST_ENDPOINTS)
+                            .requestMatchers(PUBLIC_ENDPOINTS)
                             .permitAll()
                             .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS)
                             .permitAll()

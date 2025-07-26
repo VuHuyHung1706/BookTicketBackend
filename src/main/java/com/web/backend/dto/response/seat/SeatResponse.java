@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 public class SeatResponse {
     private Integer id;
     private String name;
-    private String row;
-    private Integer col;
+    private Integer seatRow;
+    private Integer seatColumn;
     private Integer roomId;
     private SeatType seatType;
 }
