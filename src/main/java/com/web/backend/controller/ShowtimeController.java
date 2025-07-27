@@ -4,6 +4,7 @@ import com.web.backend.dto.request.showtime.ShowtimeRequest;
 import com.web.backend.dto.response.ApiResponse;
 import com.web.backend.dto.response.seat.SeatResponse;
 import com.web.backend.dto.response.showtime.ShowtimeResponse;
+import com.web.backend.dto.response.ticket.TicketResponse;
 import com.web.backend.service.showtime.ShowtimeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -99,6 +100,13 @@ public class ShowtimeController {
             @PathVariable Integer roomId) {
         return ApiResponse.<List<ShowtimeResponse>>builder()
                 .result(showtimeService.getShowtimesByMovieAndRoom(movieId, roomId))
+                .build();
+    }
+
+    @GetMapping("/{id}/booked-tickets")
+    public ApiResponse<List<TicketResponse>> getBookedTickets(@PathVariable Integer id) {
+        return ApiResponse.<List<TicketResponse>>builder()
+                .result(showtimeService.getBookedTickets(id))
                 .build();
     }
 }

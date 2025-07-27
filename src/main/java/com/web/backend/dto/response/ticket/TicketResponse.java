@@ -1,5 +1,7 @@
 package com.web.backend.dto.response.ticket;
 
+import com.web.backend.dto.response.CustomerResponse;
+import com.web.backend.entity.Invoice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +19,6 @@ public class TicketResponse {
     private Integer price;
     private Boolean status;
     private String seatName;
+    private Boolean isScanned;
+    private CustomerResponse customer;
 }

@@ -17,12 +17,12 @@ public interface ShowtimeMapper {
     @Mapping(target = "tickets", ignore = true)
     Showtime toShowtime(ShowtimeRequest request);
 
+    @Mapping(target = "cinemaName", source = "room.cinema.name")
+    @Mapping(target = "roomName", source = "room.name")
     ShowtimeResponse toShowtimeResponse(Showtime showtime);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "endTime", ignore = true)
     @Mapping(target = "movie", ignore = true)
-    @Mapping(target = "room", ignore = true)
-    @Mapping(target = "tickets", ignore = true)
     void updateShowtime(@MappingTarget Showtime showtime, ShowtimeRequest request);
 }

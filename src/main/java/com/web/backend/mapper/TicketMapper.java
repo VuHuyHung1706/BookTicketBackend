@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 public interface TicketMapper {
 
     @Mapping(source = "seat.name", target = "seatName")
+    @Mapping(source = "invoice.account.customer", target = "customer")
     TicketResponse toTicketResponse(Ticket ticket);
 
     @Mapping(source = "seat.name", target = "seatName")

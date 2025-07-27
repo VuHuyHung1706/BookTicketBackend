@@ -3,11 +3,13 @@ package com.web.backend.service.showtime;
 import com.web.backend.dto.request.showtime.ShowtimeRequest;
 import com.web.backend.dto.response.seat.SeatResponse;
 import com.web.backend.dto.response.showtime.ShowtimeResponse;
+import com.web.backend.dto.response.ticket.TicketResponse;
 import com.web.backend.entity.*;
 import com.web.backend.exception.AppException;
 import com.web.backend.exception.ErrorCode;
 import com.web.backend.mapper.SeatMapper;
 import com.web.backend.mapper.ShowtimeMapper;
+import com.web.backend.mapper.TicketMapper;
 import com.web.backend.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Autowired
     private SeatMapper seatMapper;
+
+    @Autowired
+    private TicketMapper ticketMapper;
 
     @Override
     public List<ShowtimeResponse> getAllShowtimes() {
@@ -212,6 +217,17 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         return showtimeRepository.findByMovieIdAndRoomId(movieId, roomId)
                 .stream()
                 .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
+    public List<TicketResponse> getBookedTickets(Integer showtimeId) {
+        Showtime showtime = showtimeRepository.findById(showtimeId)
+                .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_EXISTED));
+
+        // Get booked seats for this showtime
+        List<Ticket> bookedTickets = ticketRepository.findByShowtimeIdAndStatus(showtimeId, true);
+
+        return bookedTickets.stream()
+                .map(ticketMapper::toTicketResponse)
                 .collect(Collectors.toList());
     }
 
