@@ -30,6 +30,9 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
     @Value("${vnpay.return-url}")
     private String vnp_ReturnUrl;
 
+    @Value("${vnpay.ipn-url}")
+    private String vnp_IpnUrl;
+
     @Value("${vnpay.tmn-code}")
     private String vnp_TmnCode;
 
@@ -52,8 +55,6 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
         String vnp_Command = "pay";
         String orderType = "other";
         long amount = invoice.getTotalAmount() * 100L; // VNPay requires amount in VND * 100
-//        String bankCode = "NCB";
-
         String vnp_TxnRef = getRandomNumber(8);
         String vnp_IpAddr = getIpAddress(httpRequest);
 
@@ -65,10 +66,6 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
-
-//        if (bankCode != null && !bankCode.isEmpty()) {
-//            vnp_Params.put("vnp_BankCode", bankCode);
-//        }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan ve xem phim");
         vnp_Params.put("vnp_OrderType", orderType);
@@ -80,6 +77,7 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
             vnp_Params.put("vnp_Locale", "vn");
         }
         vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
+//        vnp_Params.put("vnp_IpnUrl", vnp_IpnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -172,11 +170,12 @@ public class VNPayServiceImpl extends VNPayConfig implements VNPayService {
                     // Payment successful
                     invoice.setPaymentStatus(PaymentStatus.PAID);
                     invoice.setPaidAt(LocalDateTime.now());
+                    invoiceRepository.save(invoice);
                 } else {
                     // Payment failed
                     ticketRepository.deleteAll(ticketRepository.findByInvoiceId(invoice.getId()));
-                    invoiceRepository.delete(invoice);                }
-                invoiceRepository.save(invoice);
+                    invoiceRepository.delete(invoice);
+                }
                 return "00".equals(vnp_ResponseCode);
             }
         }
