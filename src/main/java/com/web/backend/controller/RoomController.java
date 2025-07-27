@@ -43,6 +43,7 @@ public class RoomController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse<RoomResponse> createRoom(@Valid @RequestBody RoomRequest request) {
         return ApiResponse.<RoomResponse>builder()
                 .result(roomService.createRoom(request))
@@ -50,6 +51,7 @@ public class RoomController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse<RoomResponse> updateRoom(@PathVariable Integer id, @Valid @RequestBody RoomRequest request) {
         return ApiResponse.<RoomResponse>builder()
                 .result(roomService.updateRoom(id, request))
@@ -57,6 +59,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse<String> deleteRoom(@PathVariable Integer id) {
         roomService.deleteRoom(id);
         return ApiResponse.<String>builder()

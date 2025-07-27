@@ -3,7 +3,6 @@ package com.web.backend.service.seat;
 import com.web.backend.dto.request.seat.SeatRequest;
 import com.web.backend.dto.response.seat.SeatResponse;
 import com.web.backend.entity.Seat;
-import com.web.backend.constant.SeatType;
 import com.web.backend.exception.AppException;
 import com.web.backend.exception.ErrorCode;
 import com.web.backend.mapper.SeatMapper;
@@ -13,7 +12,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,9 +50,6 @@ public class SeatServiceImpl implements SeatService {
         }
 
         Seat seat = seatMapper.toSeat(request);
-        if (seat.getSeatType() == null) {
-            seat.setSeatType(SeatType.STANDARD);
-        }
         seat = seatRepository.save(seat);
         return seatMapper.toSeatResponse(seat);
     }
