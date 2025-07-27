@@ -1,6 +1,5 @@
 package com.web.backend.entity;
 
-import com.web.backend.constant.SeatType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,11 +29,6 @@ public class Seat {
 
     @Column(name = "room_id")
     private Integer roomId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "seat_type")
-    @Builder.Default
-    private SeatType seatType = SeatType.STANDARD;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", referencedColumnName = "id", insertable = false, updatable = false)

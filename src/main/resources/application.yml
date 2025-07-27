@@ -20,7 +20,12 @@ jwt:
 
 vnpay:
   pay-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-  return-url: http://localhost:8080/vnpay_jsp/vnpay_return.jsp
+  return-url: http://localhost:8080/payments/vnpay/callback
+  ipn-url: https://b8d0aa68f709.ngrok-free.app/payments/vnpay/ipn
   tmn-code: RTZSTG9H
   secret-key: 2AZN4DDW57TB4Q4OS8A50XQTCR625BAT
   api-url: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
+
+# Frontend URL
+frontend:
+  url: "http://localhost:3000"

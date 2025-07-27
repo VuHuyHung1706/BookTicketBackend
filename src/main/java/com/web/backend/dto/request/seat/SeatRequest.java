@@ -1,7 +1,5 @@
 package com.web.backend.dto.request.seat;
 
-import com.web.backend.constant.SeatType;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,6 +21,4 @@ public class SeatRequest {
 
     @NotNull(message = "ROOM_ID_NOT_NULL")
     private Integer roomId;
-
-    private SeatType seatType;
 }

@@ -13,4 +13,8 @@ public interface ShowtimeService {
     ShowtimeResponse updateShowtime(Integer id, ShowtimeRequest request);
     void deleteShowtime(Integer id);
     List<SeatResponse> getAvailableSeats(Integer showtimeId);
+    List<ShowtimeResponse> getShowtimesByMovieId(Integer movieId);
+    List<ShowtimeResponse> getShowtimesByCinemaId(Integer cinemaId);
+    List<ShowtimeResponse> getShowtimesByMovieAndCinema(Integer movieId, Integer cinemaId);
+    List<ShowtimeResponse> getShowtimesByMovieAndRoom(Integer movieId, Integer roomId);
 }

@@ -69,4 +69,36 @@ public class ShowtimeController {
                 .result(showtimeService.getAvailableSeats(id))
                 .build();
     }
+
+    @GetMapping("/movie/{movieId}")
+    public ApiResponse<List<ShowtimeResponse>> getShowtimesByMovieId(@PathVariable Integer movieId) {
+        return ApiResponse.<List<ShowtimeResponse>>builder()
+                .result(showtimeService.getShowtimesByMovieId(movieId))
+                .build();
+    }
+
+    @GetMapping("/cinema/{cinemaId}")
+    public ApiResponse<List<ShowtimeResponse>> getShowtimesByCinemaId(@PathVariable Integer cinemaId) {
+        return ApiResponse.<List<ShowtimeResponse>>builder()
+                .result(showtimeService.getShowtimesByCinemaId(cinemaId))
+                .build();
+    }
+
+    @GetMapping("/movie/{movieId}/cinema/{cinemaId}")
+    public ApiResponse<List<ShowtimeResponse>> getShowtimesByMovieAndCinema(
+            @PathVariable Integer movieId,
+            @PathVariable Integer cinemaId) {
+        return ApiResponse.<List<ShowtimeResponse>>builder()
+                .result(showtimeService.getShowtimesByMovieAndCinema(movieId, cinemaId))
+                .build();
+    }
+
+    @GetMapping("/movie/{movieId}/room/{roomId}")
+    public ApiResponse<List<ShowtimeResponse>> getShowtimesByMovieAndRoom(
+            @PathVariable Integer movieId,
+            @PathVariable Integer roomId) {
+        return ApiResponse.<List<ShowtimeResponse>>builder()
+                .result(showtimeService.getShowtimesByMovieAndRoom(movieId, roomId))
+                .build();
+    }
 }

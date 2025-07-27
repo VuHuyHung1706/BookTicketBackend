@@ -5,12 +5,11 @@ import com.web.backend.dto.response.movie.MovieResponse;
 import com.web.backend.entity.Movie;
 import com.web.backend.entity.Genre;
 import com.web.backend.entity.Actor;
+import com.web.backend.entity.Showtime;
 import com.web.backend.exception.AppException;
 import com.web.backend.exception.ErrorCode;
 import com.web.backend.mapper.MovieMapper;
-import com.web.backend.repository.MovieRepository;
-import com.web.backend.repository.GenreRepository;
-import com.web.backend.repository.ActorRepository;
+import com.web.backend.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +31,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private ActorRepository actorRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private ShowtimeRepository showtimeRepository;
 
     @Autowired
     private MovieMapper movieMapper;
@@ -126,6 +131,22 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieResponse> searchMovies(String title) {
         return movieRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
+                .map(movieMapper::toMovieResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieResponse> getMoviesByRoomId(Integer roomId) {
+        if (!roomRepository.existsById(roomId)) {
+            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
+        }
+
+        List<Movie> movies = showtimeRepository.findByRoomId(roomId)
+                .stream()
+                .map(Showtime::getMovie)
+                .toList();
+
+        return movies.stream()
                 .map(movieMapper::toMovieResponse)
                 .collect(Collectors.toList());
     }

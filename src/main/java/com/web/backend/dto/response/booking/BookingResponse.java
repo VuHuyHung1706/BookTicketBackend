@@ -1,5 +1,6 @@
 package com.web.backend.dto.response.booking;
 
+import com.web.backend.constant.PaymentStatus;
 import com.web.backend.dto.response.showtime.ShowtimeResponse;
 import com.web.backend.dto.response.seat.SeatResponse;
 import com.web.backend.dto.response.ticket.TicketResponse;
@@ -19,7 +20,10 @@ public class BookingResponse {
     private Integer invoiceId;
     private String username;
     private Integer totalAmount;
+    private PaymentStatus paymentStatus;
+    private String vnpayTransactionId;
     private LocalDateTime bookingTime;
+    private LocalDateTime paidAt;
     private ShowtimeResponse showtime;
     private List<SeatResponse> seats;
     private List<TicketResponse> tickets;

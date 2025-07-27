@@ -23,8 +23,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_POST_ENDPOINTS = {
-            "/accounts/register", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/actors/**", "/genres/**" ,
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/accounts/register", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/actors/**", "/genres/**" , "/payments/**",
     };
 
     private final String[] PUBLIC_GET_ENDPOINTS = {
@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers(PUBLIC_POST_ENDPOINTS)
+                            .requestMatchers(PUBLIC_ENDPOINTS)
                             .permitAll()
                             .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS)
                             .permitAll()
@@ -66,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://10.0.2.2:8080"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://10.0.2.2:8080", "http://localhost:5173/"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

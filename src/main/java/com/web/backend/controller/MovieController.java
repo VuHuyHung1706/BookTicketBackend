@@ -65,4 +65,11 @@ public class MovieController {
                 .result(movieService.searchMovies(title))
                 .build();
     }
+
+    @GetMapping("/room/{roomId}")
+    public ApiResponse<List<MovieResponse>> getMoviesByRoomId(@PathVariable Integer roomId) {
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getMoviesByRoomId(roomId))
+                .build();
+    }
 }
