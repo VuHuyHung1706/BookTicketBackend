@@ -16,4 +16,5 @@ public interface ShowtimeService {
     List<ShowtimeResponse> getShowtimesByMovieId(Integer movieId);
     List<ShowtimeResponse> getShowtimesByCinemaId(Integer cinemaId);
     List<ShowtimeResponse> getShowtimesByMovieAndCinema(Integer movieId, Integer cinemaId);
+    List<ShowtimeResponse> getShowtimesByMovieAndRoom(Integer movieId, Integer roomId);
 }

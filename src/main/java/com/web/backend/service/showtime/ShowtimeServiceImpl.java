@@ -199,4 +199,20 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ShowtimeResponse> getShowtimesByMovieAndRoom(Integer movieId, Integer roomId) {
+        if (!movieRepository.existsById(movieId)) {
+            throw new AppException(ErrorCode.MOVIE_NOT_EXISTED);
+        }
+
+        if (!roomRepository.existsById(roomId)) {
+            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
+        }
+
+        return showtimeRepository.findByMovieIdAndRoomId(movieId, roomId)
+                .stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
+
 }

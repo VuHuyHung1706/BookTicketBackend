@@ -92,4 +92,13 @@ public class ShowtimeController {
                 .result(showtimeService.getShowtimesByMovieAndCinema(movieId, cinemaId))
                 .build();
     }
+
+    @GetMapping("/movie/{movieId}/room/{roomId}")
+    public ApiResponse<List<ShowtimeResponse>> getShowtimesByMovieAndRoom(
+            @PathVariable Integer movieId,
+            @PathVariable Integer roomId) {
+        return ApiResponse.<List<ShowtimeResponse>>builder()
+                .result(showtimeService.getShowtimesByMovieAndRoom(movieId, roomId))
+                .build();
+    }
 }
