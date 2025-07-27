@@ -39,6 +39,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     private TicketRepository ticketRepository;
 
     @Autowired
+    private CinemaRepository cinemaRepository;
+
+    @Autowired
     private ShowtimeMapper showtimeMapper;
 
     @Autowired
@@ -154,5 +157,46 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ShowtimeResponse> getShowtimesByMovieId(Integer movieId) {
+        // Validate movie exists
+        if (!movieRepository.existsById(movieId)) {
+            throw new AppException(ErrorCode.MOVIE_NOT_EXISTED);
+        }
+
+        return showtimeRepository.findByMovieId(movieId)
+                .stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowtimeResponse> getShowtimesByCinemaId(Integer cinemaId) {
+        // Validate cinema exists
+        if (!cinemaRepository.existsById(cinemaId)) {
+            throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
+        }
+
+        return showtimeRepository.findByRoomCinemaId(cinemaId)
+                .stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShowtimeResponse> getShowtimesByMovieAndCinema(Integer movieId, Integer cinemaId) {
+        if (!movieRepository.existsById(movieId)) {
+            throw new AppException(ErrorCode.MOVIE_NOT_EXISTED);
+        }
+
+        if (!cinemaRepository.existsById(cinemaId)) {
+            throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
+        }
+
+        return showtimeRepository.findByMovieIdAndRoomCinemaId(movieId, cinemaId)
+                .stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
 
 }
