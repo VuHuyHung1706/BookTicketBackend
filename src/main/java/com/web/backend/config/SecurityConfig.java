@@ -28,7 +28,7 @@ public class SecurityConfig {
     };
 
     private final String[] PUBLIC_GET_ENDPOINTS = {
-            "/movies/**", "/cinemas/**", "showtimes/**",
+            "/movies/**", "/cinemas/**", "/showtimes/**", "/rooms/**", "/seats/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v3/api-docs/**",

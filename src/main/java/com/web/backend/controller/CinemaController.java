@@ -58,4 +58,11 @@ public class CinemaController {
                 .result("Cinema deleted successfully")
                 .build();
     }
+
+    @GetMapping("/movie/{movieId}")
+    public ApiResponse<List<CinemaResponse>> getCinemasByMovieId(@PathVariable Integer movieId) {
+        return ApiResponse.<List<CinemaResponse>>builder()
+                .result(cinemaService.getCinemasByMovieId(movieId))
+                .build();
+    }
 }

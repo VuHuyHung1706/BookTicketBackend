@@ -57,10 +57,10 @@ public class SeatServiceImpl implements SeatService {
     @Override
     public SeatResponse updateSeat(Integer id, SeatRequest request) {
         Seat seat = seatRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_EXISTED));
 
         if (!roomRepository.existsById(request.getRoomId())) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
         }
 
         seatMapper.updateSeat(seat, request);

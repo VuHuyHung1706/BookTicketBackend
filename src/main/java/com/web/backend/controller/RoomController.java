@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/rooms")
 @SecurityRequirement(name = "Bearer")
-@PreAuthorize("hasRole('MANAGER')")
 public class RoomController {
 
     @Autowired
