@@ -54,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomResponse createRoom(RoomRequest request) {
         if (!cinemaRepository.existsById(request.getCinemaId())) {
-            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
+            throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
         }
 
         Room room = roomMapper.toRoom(request);
