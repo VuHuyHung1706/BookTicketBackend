@@ -1,6 +1,5 @@
 package com.web.backend.dto.response.movie;
 
-import com.web.backend.constant.MovieStatus;
 import com.web.backend.dto.response.actor.ActorResponse;
 import com.web.backend.dto.response.genre.GenreResponse;
 import lombok.AllArgsConstructor;
@@ -24,8 +23,6 @@ public class MovieResponse {
     private String poster;
     private String trailer;
     private LocalDate releaseDate;
-    private LocalDate endDate;
-    private MovieStatus status;
     private Set<GenreResponse> genres;
     private Set<ActorResponse> actors;
 }

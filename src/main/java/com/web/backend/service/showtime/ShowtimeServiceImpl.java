@@ -231,4 +231,18 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ShowtimeResponse> getShowtimesShowing() {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Showtime> showtimes = showtimeRepository.findAll()
+                .stream()
+                .filter(showtime -> showtime.getStartTime().isAfter(now))
+                .collect(Collectors.toList());
+
+        return showtimes.stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
+
 }

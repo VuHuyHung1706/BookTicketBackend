@@ -1,6 +1,5 @@
 package com.web.backend.entity;
 
-import com.web.backend.constant.MovieStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,14 +40,6 @@ public class Movie {
 
     @Column(name = "release_date")
     private LocalDate releaseDate;
-
-    @Column(name = "end_date")
-    private LocalDate endDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    @Builder.Default
-    private MovieStatus status = MovieStatus.COMING_SOON;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
