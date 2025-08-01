@@ -1,13 +1,16 @@
 package com.web.backend.service.report;
 
-import com.web.backend.dto.response.report.CinemaReportResponse;
-import com.web.backend.dto.response.report.MovieReportResponse;
-import com.web.backend.dto.response.report.RevenueReportResponse;
+import com.web.backend.dto.response.report.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ReportService {
-    RevenueReportResponse getTotalReport(LocalDate date, LocalDate startDate, LocalDate endDate);
-    MovieReportResponse getSpecificMovieReport(Integer movieId, LocalDate date, LocalDate startDate, LocalDate endDate);
-    CinemaReportResponse getSpecificCinemaReport(Integer cinemaId, LocalDate date, LocalDate startDate, LocalDate endDate);
+    List<CinemaReportResponse> getRevenueByCinema(LocalDateTime from, LocalDateTime to);
+    List<MovieReportResponse> getRevenueByMovie(LocalDateTime from, LocalDateTime to);
+    List<DailyReportResponse> getRevenueByDay(LocalDateTime from, LocalDateTime to);
+    List<TimeReportResponse> getRevenueByMonth(LocalDateTime from, LocalDateTime to);
+    List<TimeReportResponse> getRevenueByQuarter(LocalDateTime from, LocalDateTime to);
+    List<TimeReportResponse> getRevenueByYear(LocalDateTime from, LocalDateTime to);
 }

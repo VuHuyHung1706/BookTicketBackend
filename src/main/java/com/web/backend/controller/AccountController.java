@@ -44,7 +44,7 @@ public class AccountController {
                 .build();
     }
 
-    @GetMapping("manager/profile")
+        @GetMapping("manager/profile")
     public ApiResponse<ManagerResponse> getManagerProfile() {
         return ApiResponse.<ManagerResponse>builder()
                 .result(accountService.getManager())
