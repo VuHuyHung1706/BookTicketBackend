@@ -12,10 +12,14 @@ import com.web.backend.mapper.MovieMapper;
 import com.web.backend.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,11 +46,9 @@ public class MovieServiceImpl implements MovieService {
     private MovieMapper movieMapper;
 
     @Override
-    public List<MovieResponse> getAllMovies() {
-        return movieRepository.findAll()
-                .stream()
-                .map(movieMapper::toMovieResponse)
-                .collect(Collectors.toList());
+    public Page<MovieResponse> getAllMovies(Pageable pageable) {
+        return movieRepository.findAll(pageable)
+                .map(movieMapper::toMovieResponse);
     }
 
     @Override
@@ -147,6 +149,39 @@ public class MovieServiceImpl implements MovieService {
                 .toList();
 
         return movies.stream()
+                .map(movieMapper::toMovieResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieResponse> getNowShowingMovies() {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Movie> nowShowingMovies = showtimeRepository.findAll()
+                .stream()
+                .filter(showtime -> (showtime.getStartTime().isBefore(now) || showtime.getStartTime().isEqual(now))
+                        && (showtime.getEndTime().isAfter(now) || showtime.getEndTime().isEqual(now)))
+                .map(Showtime::getMovie)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return nowShowingMovies.stream()
+                .map(movieMapper::toMovieResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieResponse> getUpcomingMovies() {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Movie> upcomingMovies = showtimeRepository.findAll()
+                .stream()
+                .filter(showtime -> showtime.getStartTime().isAfter(now))
+                .map(Showtime::getMovie)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return upcomingMovies.stream()
                 .map(movieMapper::toMovieResponse)
                 .collect(Collectors.toList());
     }

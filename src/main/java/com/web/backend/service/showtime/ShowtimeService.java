@@ -4,11 +4,14 @@ import com.web.backend.dto.request.showtime.ShowtimeRequest;
 import com.web.backend.dto.response.seat.SeatResponse;
 import com.web.backend.dto.response.showtime.ShowtimeResponse;
 import com.web.backend.dto.response.ticket.TicketResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ShowtimeService {
-    List<ShowtimeResponse> getAllShowtimes();
+    Page<ShowtimeResponse> getAllShowtimes(Pageable pageable);
     ShowtimeResponse getShowtimeById(Integer id);
     ShowtimeResponse createShowtime(ShowtimeRequest request);
     ShowtimeResponse updateShowtime(Integer id, ShowtimeRequest request);

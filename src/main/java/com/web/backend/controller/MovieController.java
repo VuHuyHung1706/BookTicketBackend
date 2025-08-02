@@ -7,6 +7,8 @@ import com.web.backend.service.movie.MovieService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,9 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping
-    public ApiResponse<List<MovieResponse>> getAllMovies() {
-        return ApiResponse.<List<MovieResponse>>builder()
-                .result(movieService.getAllMovies())
+    public ApiResponse<Page<MovieResponse>> getAllMovies(Pageable pageable) {
+        return ApiResponse.<Page<MovieResponse>>builder()
+                .result(movieService.getAllMovies(pageable))
                 .build();
     }
 
@@ -70,6 +72,20 @@ public class MovieController {
     public ApiResponse<List<MovieResponse>> getMoviesByRoomId(@PathVariable Integer roomId) {
         return ApiResponse.<List<MovieResponse>>builder()
                 .result(movieService.getMoviesByRoomId(roomId))
+                .build();
+    }
+
+    @GetMapping("/now-showing")
+    public ApiResponse<List<MovieResponse>> getNowShowingMovies() {
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getNowShowingMovies())
+                .build();
+    }
+
+    @GetMapping("/upcoming")
+    public ApiResponse<List<MovieResponse>> getUpcomingMovies() {
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getUpcomingMovies())
                 .build();
     }
 }

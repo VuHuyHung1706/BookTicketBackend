@@ -9,6 +9,8 @@ import com.web.backend.service.showtime.ShowtimeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +27,9 @@ public class ShowtimeController {
     private ShowtimeService showtimeService;
 
     @GetMapping
-    public ApiResponse<List<ShowtimeResponse>> getAllShowtimes() {
-        return ApiResponse.<List<ShowtimeResponse>>builder()
-                .result(showtimeService.getAllShowtimes())
+    public ApiResponse<Page<ShowtimeResponse>> getAllShowtimes(Pageable pageable) {
+        return ApiResponse.<Page<ShowtimeResponse>>builder()
+                .result(showtimeService.getAllShowtimes(pageable))
                 .build();
     }
 

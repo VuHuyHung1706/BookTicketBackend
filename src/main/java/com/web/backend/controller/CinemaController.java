@@ -7,6 +7,8 @@ import com.web.backend.service.cinema.CinemaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,9 @@ public class CinemaController {
     private CinemaService cinemaService;
 
     @GetMapping
-    public ApiResponse<List<CinemaResponse>> getAllCinemas() {
-        return ApiResponse.<List<CinemaResponse>>builder()
-                .result(cinemaService.getAllCinemas())
+    public ApiResponse<Page<CinemaResponse>> getAllCinemas(Pageable pageable) {
+        return ApiResponse.<Page<CinemaResponse>>builder()
+                .result(cinemaService.getAllCinemas(pageable))
                 .build();
     }
 

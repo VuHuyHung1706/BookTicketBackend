@@ -13,6 +13,8 @@ import com.web.backend.mapper.TicketMapper;
 import com.web.backend.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -53,11 +55,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     private TicketMapper ticketMapper;
 
     @Override
-    public List<ShowtimeResponse> getAllShowtimes() {
-        return showtimeRepository.findAll()
-                .stream()
-                .map(showtimeMapper::toShowtimeResponse)
-                .collect(Collectors.toList());
+    public Page<ShowtimeResponse> getAllShowtimes(Pageable pageable) {
+        return showtimeRepository.findAll(pageable)
+                .map(showtimeMapper::toShowtimeResponse);
     }
 
     @Override
@@ -164,7 +164,6 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     public List<ShowtimeResponse> getShowtimesByMovieId(Integer movieId) {
-        // Validate movie exists
         if (!movieRepository.existsById(movieId)) {
             throw new AppException(ErrorCode.MOVIE_NOT_EXISTED);
         }
@@ -177,7 +176,6 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     public List<ShowtimeResponse> getShowtimesByCinemaId(Integer cinemaId) {
-        // Validate cinema exists
         if (!cinemaRepository.existsById(cinemaId)) {
             throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
         }
