@@ -164,30 +164,38 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     public List<ShowtimeResponse> getShowtimesByMovieId(Integer movieId) {
+        LocalDateTime now = LocalDateTime.now();
+
         if (!movieRepository.existsById(movieId)) {
             throw new AppException(ErrorCode.MOVIE_NOT_EXISTED);
         }
 
         return showtimeRepository.findByMovieId(movieId)
                 .stream()
+                .filter(showtime -> (showtime.getStartTime().isEqual(now) || showtime.getStartTime().isAfter(now)))
                 .map(showtimeMapper::toShowtimeResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ShowtimeResponse> getShowtimesByCinemaId(Integer cinemaId) {
+        LocalDateTime now = LocalDateTime.now();
+
         if (!cinemaRepository.existsById(cinemaId)) {
             throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
         }
 
         return showtimeRepository.findByRoomCinemaId(cinemaId)
                 .stream()
+                .filter(showtime -> (showtime.getStartTime().isEqual(now) || showtime.getStartTime().isAfter(now)))
                 .map(showtimeMapper::toShowtimeResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ShowtimeResponse> getShowtimesByMovieAndCinema(Integer movieId, Integer cinemaId) {
+        LocalDateTime now = LocalDateTime.now();
+
         if (!movieRepository.existsById(movieId)) {
             throw new AppException(ErrorCode.MOVIE_NOT_EXISTED);
         }
@@ -198,12 +206,15 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
         return showtimeRepository.findByMovieIdAndRoomCinemaId(movieId, cinemaId)
                 .stream()
+                .filter(showtime -> (showtime.getStartTime().isEqual(now) || showtime.getStartTime().isAfter(now)))
                 .map(showtimeMapper::toShowtimeResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ShowtimeResponse> getShowtimesByMovieAndRoom(Integer movieId, Integer roomId) {
+        LocalDateTime now = LocalDateTime.now();
+
         if (!movieRepository.existsById(movieId)) {
             throw new AppException(ErrorCode.MOVIE_NOT_EXISTED);
         }
@@ -214,6 +225,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
         return showtimeRepository.findByMovieIdAndRoomId(movieId, roomId)
                 .stream()
+                .filter(showtime -> (showtime.getStartTime().isEqual(now) || showtime.getStartTime().isAfter(now)))
                 .map(showtimeMapper::toShowtimeResponse)
                 .collect(Collectors.toList());
     }

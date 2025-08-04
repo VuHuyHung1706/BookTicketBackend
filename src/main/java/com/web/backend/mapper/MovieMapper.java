@@ -16,6 +16,8 @@ public interface MovieMapper {
     @Mapping(target = "showtimes", ignore = true)
     Movie toMovie(MovieRequest request);
 
+    @Mapping(target = "nowShowing", ignore = true)
+    @Mapping(target = "upcoming", ignore = true)
     MovieResponse toMovieResponse(Movie movie);
 
     @Mapping(target = "id", ignore = true)

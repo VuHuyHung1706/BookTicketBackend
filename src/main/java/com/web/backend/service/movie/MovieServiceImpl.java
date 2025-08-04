@@ -43,6 +43,9 @@ public class MovieServiceImpl implements MovieService {
     private ShowtimeRepository showtimeRepository;
 
     @Autowired
+    private CinemaRepository cinemaRepository;
+
+    @Autowired
     private MovieMapper movieMapper;
 
     @Override
@@ -138,6 +141,35 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieResponse> searchMovieByTitleCinemaId(String title, Integer cinemaId) {
+        List<Movie> movies;
+
+        if (title != null && !title.isEmpty()) {
+            movies = movieRepository.findByTitleContainingIgnoreCase(title);
+        } else {
+            movies = movieRepository.findAll();
+        }
+
+        if (cinemaId != null) {
+            if (!cinemaRepository.existsById(cinemaId)) {
+                throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
+            }
+            List<Showtime> showtimesAtCinema = showtimeRepository.findByRoomCinemaId(cinemaId);
+            Set<Integer> movieIdsAtCinema = showtimesAtCinema.stream()
+                    .map(Showtime::getMovieId)
+                    .collect(Collectors.toSet());
+
+            movies = movies.stream()
+                    .filter(movie -> movieIdsAtCinema.contains(movie.getId()))
+                    .collect(Collectors.toList());
+        }
+
+        return movies.stream()
+                .map(this::mapMovieToResponseWithStatus)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<MovieResponse> getMoviesByRoomId(Integer roomId) {
         if (!roomRepository.existsById(roomId)) {
             throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
@@ -184,5 +216,45 @@ public class MovieServiceImpl implements MovieService {
         return upcomingMovies.stream()
                 .map(movieMapper::toMovieResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieResponse> getMoviesByCinemaId(Integer cinemaId) {
+        if (!cinemaRepository.existsById(cinemaId)) {
+            throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Showtime> showtimes = showtimeRepository.findByRoomCinemaId(cinemaId);
+
+        List<Movie> movies = showtimes.stream()
+                .filter(showtime -> showtime.getStartTime().isAfter(now))
+                .map(Showtime::getMovie)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return movies.stream()
+                .map(movieMapper::toMovieResponse)
+                .collect(Collectors.toList());
+    }
+
+
+    public MovieResponse mapMovieToResponseWithStatus(Movie movie) {
+        MovieResponse response = movieMapper.toMovieResponse(movie);
+        LocalDateTime now = LocalDateTime.now();
+
+        boolean nowShowing = movie.getShowtimes().stream()
+                .anyMatch(showtime ->
+                        (showtime.getStartTime().isBefore(now) || showtime.getStartTime().isEqual(now)) &&
+                                (showtime.getEndTime().isAfter(now) || showtime.getEndTime().isEqual(now))
+                );
+
+        boolean upcoming = movie.getShowtimes().stream()
+                .anyMatch(showtime -> showtime.getStartTime().isAfter(now));
+
+        response.setNowShowing(nowShowing);
+        response.setUpcoming(upcoming);
+        return response;
     }
 }

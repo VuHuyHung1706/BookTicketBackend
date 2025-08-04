@@ -25,4 +25,6 @@ public class MovieResponse {
     private LocalDate releaseDate;
     private Set<GenreResponse> genres;
     private Set<ActorResponse> actors;
+    private boolean nowShowing;
+    private boolean upcoming;
 }

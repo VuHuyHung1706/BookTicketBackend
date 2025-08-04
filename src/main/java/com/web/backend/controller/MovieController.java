@@ -68,6 +68,15 @@ public class MovieController {
                 .build();
     }
 
+    @GetMapping("/search-by-title-and-cinema")
+    public ApiResponse<List<MovieResponse>> searchMoviesByTitleAndCinema(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Integer cinemaId) {
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.searchMovieByTitleCinemaId(title, cinemaId))
+                .build();
+    }
+
     @GetMapping("/room/{roomId}")
     public ApiResponse<List<MovieResponse>> getMoviesByRoomId(@PathVariable Integer roomId) {
         return ApiResponse.<List<MovieResponse>>builder()
