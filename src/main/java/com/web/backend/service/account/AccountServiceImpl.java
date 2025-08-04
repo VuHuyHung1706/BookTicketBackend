@@ -46,10 +46,6 @@ public class AccountServiceImpl implements AccountService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
-        if (request.getEmail() != null && customerRepository.existsByEmail(request.getEmail())) {
-            throw new AppException(ErrorCode.EMAIL_EXISTED);
-        }
-
         Account account = Account.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
