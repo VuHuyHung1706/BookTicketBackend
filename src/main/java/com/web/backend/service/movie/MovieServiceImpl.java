@@ -51,7 +51,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Page<MovieResponse> getAllMovies(Pageable pageable) {
         return movieRepository.findAll(pageable)
-                .map(movieMapper::toMovieResponse);
+                .map(this::mapMovieToResponseWithStatus);
     }
 
     @Override
