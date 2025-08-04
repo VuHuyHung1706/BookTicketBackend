@@ -46,6 +46,10 @@ public class AccountServiceImpl implements AccountService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
+        if (request.getEmail() != null && customerRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+
         Account account = Account.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -84,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
         Customer customer = customerRepository.findByAccountUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if (request.getEmail() != null && customerRepository.existsByEmail(request.getEmail())) {
+        if (request.getEmail() != null && !request.getEmail().equals(customer.getEmail()) && customerRepository.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
 
