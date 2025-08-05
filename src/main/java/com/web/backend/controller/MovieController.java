@@ -75,12 +75,13 @@ public class MovieController {
                 .build();
     }
 
-    @GetMapping("/search-by-title-and-cinema")
-    public ApiResponse<List<MovieResponse>> searchMoviesByTitleAndCinema(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) Integer cinemaId) {
+    @GetMapping("/search-advanced")
+    public ApiResponse<List<MovieResponse>> searchMovieAdvanced(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Integer cinemaId,
+            @RequestParam(required = false) List<Integer> genreIds) {
         return ApiResponse.<List<MovieResponse>>builder()
-                .result(movieService.searchMovieByTitleCinemaId(title, cinemaId))
+                .result(movieService.searchMovies(query, cinemaId, genreIds))
                 .build();
     }
 

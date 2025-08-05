@@ -149,15 +149,29 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponse> searchMovieByTitleCinemaId(String title, Integer cinemaId) {
-        List<Movie> movies;
+    public List<MovieResponse> searchMovies(String query, Integer cinemaId, List<Integer> genreIds) {
+        List<Movie> movies = movieRepository.findAll();
 
-        if (title != null && !title.isEmpty()) {
-            movies = movieRepository.findByTitleContainingIgnoreCase(title);
-        } else {
-            movies = movieRepository.findAll();
+        // Filter by title or actor name
+        if (query != null && !query.isEmpty()) {
+            Set<Movie> filteredByQuery = new HashSet<>();
+
+            filteredByQuery.addAll(movieRepository.findByTitleContainingIgnoreCase(query));
+
+            List<Actor> matchingActors = actorRepository.findAll().stream()
+                    .filter(actor -> (actor.getFirstName() != null && actor.getFirstName().toLowerCase().contains(query.toLowerCase())) ||
+                            (actor.getLastName() != null && actor.getLastName().toLowerCase().contains(query.toLowerCase())))
+                    .collect(Collectors.toList());
+
+            for (Actor actor : matchingActors) {
+                filteredByQuery.addAll(actor.getMovies());
+            }
+            movies = movies.stream()
+                    .filter(filteredByQuery::contains)
+                    .collect(Collectors.toList());
         }
 
+        // Filter by cinemaId
         if (cinemaId != null) {
             if (!cinemaRepository.existsById(cinemaId)) {
                 throw new AppException(ErrorCode.CINEMA_NOT_EXISTED);
@@ -169,6 +183,15 @@ public class MovieServiceImpl implements MovieService {
 
             movies = movies.stream()
                     .filter(movie -> movieIdsAtCinema.contains(movie.getId()))
+                    .collect(Collectors.toList());
+        }
+
+        // Filter by genreIds
+        if (genreIds != null && !genreIds.isEmpty()) {
+            Set<Integer> genreIdSet = new HashSet<>(genreIds);
+            movies = movies.stream()
+                    .filter(movie -> movie.getGenres().stream()
+                            .anyMatch(genre -> genreIdSet.contains(genre.getId())))
                     .collect(Collectors.toList());
         }
 
