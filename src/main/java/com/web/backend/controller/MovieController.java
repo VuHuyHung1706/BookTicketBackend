@@ -22,6 +22,13 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
+    @GetMapping("/all")
+    public ApiResponse<List<MovieResponse>> getAllMovies() {
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getAllMovie())
+                .build();
+    }
+
     @GetMapping
     public ApiResponse<Page<MovieResponse>> getAllMovies(Pageable pageable) {
         return ApiResponse.<Page<MovieResponse>>builder()
