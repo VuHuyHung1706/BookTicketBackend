@@ -12,8 +12,10 @@ import com.web.backend.mapper.ManagerMapper;
 import com.web.backend.repository.AccountRepository;
 import com.web.backend.repository.CustomerRepository;
 import com.web.backend.repository.ManagerRepository;
+import com.web.backend.service.mail.MailService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,14 +42,57 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private ManagerMapper managerMapper;
 
+    @Autowired
+    private MailService mailService;
+
+//    @Override
+//    public CustomerResponse registerUser(UserRegistrationRequest request) {
+//        if (accountRepository.existsByUsername(request.getUsername())) {
+//            throw new AppException(ErrorCode.USER_EXISTED);
+//        }
+//
+//        if (request.getEmail() != null && customerRepository.existsByEmail(request.getEmail())) {
+//            throw new AppException(ErrorCode.EMAIL_EXISTED);
+//        }
+//
+//        mailService.sendMail(request.getEmail());
+//
+//        Account account = Account.builder()
+//                .username(request.getUsername())
+//                .password(passwordEncoder.encode(request.getPassword()))
+//                .status(true)
+//                .build();
+//
+//        account = accountRepository.save(account);
+//
+//        Customer customer = customerMapper.toCustomer(request);
+//        customer.setAccount(account);
+//
+//        customer = customerRepository.save(customer);
+//
+//        return customerMapper.toCustomerResponse(customer);
+//    }
+
     @Override
-    public CustomerResponse registerUser(UserRegistrationRequest request) {
+    public void sendOtp(UserRegistrationRequest request) {
         if (accountRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
         if (request.getEmail() != null && customerRepository.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+
+        // Generate and send OTP
+        mailService.sendMail(request.getEmail());
+    }
+
+    @Override
+    public CustomerResponse completeRegistration(UserRegistrationRequest request, String otp) {
+        // Verify OTP
+        boolean isOtpValid = mailService.verifyOtp(request.getEmail(), otp);
+        if (!isOtpValid) {
+            throw new AppException(ErrorCode.INVALID_OTP);
         }
 
         Account account = Account.builder()

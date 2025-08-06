@@ -5,7 +5,6 @@ import com.web.backend.dto.response.*;
 import com.web.backend.service.account.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,10 +14,25 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @PostMapping("/register")
-    public ApiResponse<CustomerResponse> registerUser(@Valid @RequestBody UserRegistrationRequest request) {
+//    @PostMapping("/register")
+//    public ApiResponse<CustomerResponse> registerUser(@Valid @RequestBody UserRegistrationRequest request) {
+//        return ApiResponse.<CustomerResponse>builder()
+//                .result(accountService.registerUser(request))
+//                .build();
+//    }
+
+    @PostMapping("/send-otp")
+    public ApiResponse<String> sendOtp(@Valid @RequestBody UserRegistrationRequest request) {
+        accountService.sendOtp(request);
+        return ApiResponse.<String>builder()
+                .result("Please check your email for the OTP.")
+                .build();
+    }
+
+    @PostMapping("/complete-register")
+    public ApiResponse<CustomerResponse> completeRegister(@Valid @RequestBody UserRegistrationRequest request, @RequestParam String otp) {
         return ApiResponse.<CustomerResponse>builder()
-                .result(accountService.registerUser(request))
+                .result(accountService.completeRegistration(request, otp))
                 .build();
     }
 

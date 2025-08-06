@@ -14,6 +14,7 @@ public enum ErrorCode {
 
     INVALID_USERNAME(1003, "Username must be at least 4 characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1003, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
+    INVALID_OTP(1004, "Invalid or expired OTP", HttpStatus.BAD_REQUEST),
 
     USER_NOT_EXISTED(1004, "User not found", HttpStatus.NOT_FOUND),
     MOVIE_NOT_EXISTED(1004, "Movie not found", HttpStatus.NOT_FOUND),
