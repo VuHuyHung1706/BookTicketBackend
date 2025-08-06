@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CinemaService {
+    List<CinemaResponse> getAllCinemas();
     Page<CinemaResponse> getAllCinemas(Pageable pageable);
     CinemaResponse getCinemaById(Integer id);
     CinemaResponse createCinema(CinemaRequest request);

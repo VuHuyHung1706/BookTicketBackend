@@ -37,6 +37,14 @@ public class CinemaServiceImpl implements CinemaService {
     private CinemaMapper cinemaMapper;
 
     @Override
+    public List<CinemaResponse> getAllCinemas() {
+        return cinemaRepository.findAll()
+                .stream()
+                .map(cinemaMapper::toCinemaResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<CinemaResponse> getAllCinemas(Pageable pageable) {
         return cinemaRepository.findAll(pageable)
                 .map(cinemaMapper::toCinemaResponse);

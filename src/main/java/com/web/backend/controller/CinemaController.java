@@ -22,6 +22,13 @@ public class CinemaController {
     @Autowired
     private CinemaService cinemaService;
 
+    @GetMapping("/all")
+    public ApiResponse<List<CinemaResponse>> getAllCinemas() {
+        return ApiResponse.<List<CinemaResponse>>builder()
+                .result(cinemaService.getAllCinemas())
+                .build();
+    }
+
     @GetMapping
     public ApiResponse<Page<CinemaResponse>> getAllCinemas(Pageable pageable) {
         return ApiResponse.<Page<CinemaResponse>>builder()
