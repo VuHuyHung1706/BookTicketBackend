@@ -26,6 +26,13 @@ public class ShowtimeController {
     @Autowired
     private ShowtimeService showtimeService;
 
+    @GetMapping("/all")
+    public ApiResponse<List<ShowtimeResponse>> getAllShowtimes() {
+        return ApiResponse.<List<ShowtimeResponse>>builder()
+                .result(showtimeService.getAllShowtimes())
+                .build();
+    }
+
     @GetMapping
     public ApiResponse<Page<ShowtimeResponse>> getAllShowtimes(Pageable pageable) {
         return ApiResponse.<Page<ShowtimeResponse>>builder()

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ShowtimeService {
+    List<ShowtimeResponse> getAllShowtimes();
     Page<ShowtimeResponse> getAllShowtimes(Pageable pageable);
     ShowtimeResponse getShowtimeById(Integer id);
     ShowtimeResponse createShowtime(ShowtimeRequest request);

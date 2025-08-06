@@ -55,6 +55,14 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     private TicketMapper ticketMapper;
 
     @Override
+    public List<ShowtimeResponse> getAllShowtimes() {
+        return showtimeRepository.findAll()
+                .stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<ShowtimeResponse> getAllShowtimes(Pageable pageable) {
         return showtimeRepository.findAll(pageable)
                 .map(showtimeMapper::toShowtimeResponse);
