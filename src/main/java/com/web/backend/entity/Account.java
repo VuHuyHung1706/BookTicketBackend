@@ -18,7 +18,6 @@ public class Account {
     @Column(name = "username", unique = true)
     private String username;
 
-    @NotBlank(message = "Password cannot be empty")
     @Column(name = "password")
     private String password;
     

@@ -5,19 +5,23 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.web.backend.dto.request.auth.AuthenticationRequest;
-import com.web.backend.dto.request.auth.IntrospectRequest;
-import com.web.backend.dto.request.auth.LogoutRequest;
-import com.web.backend.dto.request.auth.RefreshRequest;
+import com.web.backend.dto.request.auth.*;
+import com.web.backend.dto.response.GoogleUserResponse;
 import com.web.backend.dto.response.auth.AuthenticationResponse;
+import com.web.backend.dto.response.auth.ExchangeTokenResponse;
 import com.web.backend.dto.response.auth.IntrospectResponse;
 import com.web.backend.entity.Account;
+import com.web.backend.entity.Customer;
 import com.web.backend.entity.InvalidatedToken;
+import com.web.backend.entity.Manager;
 import com.web.backend.exception.AppException;
 import com.web.backend.exception.ErrorCode;
 import com.web.backend.repository.AccountRepository;
+import com.web.backend.repository.CustomerRepository;
+import com.web.backend.repository.google.GoogleIdentityClient;
 import com.web.backend.repository.InvalidatedTokenRepository;
 import com.web.backend.repository.ManagerRepository;
+import com.web.backend.repository.google.GoogleUserClient;
 import jakarta.transaction.Transactional;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +53,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
 
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String REDIRECT_URI;
+
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
+
     @Autowired
     private AccountRepository accountRepository;
 
@@ -57,6 +76,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private InvalidatedTokenRepository invalidatedTokenRepository;
+
+    @Autowired
+    private GoogleIdentityClient googleIdentityClient;
+
+    @Autowired
+    private GoogleUserClient googleUserClient;
+    @Autowired
+    private CustomerRepository customerRepository;
+
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -78,6 +106,45 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
+                .build();
+    }
+
+    public AuthenticationResponse googleLogin(String code) {
+        ExchangeTokenResponse response = googleIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .redirectUri(REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build());
+
+        GoogleUserResponse userInfo = googleUserClient.getUserInfo("json", response.getAccessToken());
+
+        if (!accountRepository.existsByUsername(userInfo.getEmail())) {
+            Account googleAccount = Account.builder()
+                    .username(userInfo.getEmail())
+                    .password("")
+                    .status(true)
+                    .build();
+
+            googleAccount = accountRepository.save(googleAccount);
+
+            Customer customer = Customer.builder()
+                    .firstName(userInfo.getGivenName())
+                    .lastName(userInfo.getFamilyName())
+                    .email(userInfo.getEmail())
+                    .account(googleAccount)
+                    .build();
+
+            customerRepository.save(customer);
+        }
+
+        Account account = accountRepository.findByUsername(userInfo.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String token = generateJwtToken(account);
+
+        return AuthenticationResponse.builder()
+                .token(token)
                 .build();
     }
 

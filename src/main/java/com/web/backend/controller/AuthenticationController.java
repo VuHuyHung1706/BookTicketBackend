@@ -10,10 +10,7 @@ import com.web.backend.dto.response.auth.AuthenticationResponse;
 import com.web.backend.dto.response.auth.IntrospectResponse;
 import com.web.backend.service.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -27,6 +24,14 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/google/login")
+    public ApiResponse<AuthenticationResponse> googleLogin(@RequestParam String code) {
+        var result = authenticationService.googleLogin(code);
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
                 .build();
