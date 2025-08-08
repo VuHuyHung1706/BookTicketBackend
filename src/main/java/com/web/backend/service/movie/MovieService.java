@@ -5,6 +5,7 @@ import com.web.backend.dto.response.movie.MovieResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MovieService {
@@ -16,6 +17,7 @@ public interface MovieService {
     void deleteMovie(Integer id);
     List<MovieResponse> searchMovies(String title);
     List<MovieResponse> searchMovies(String query, Integer cinemaId, List<Integer> genreIds);
+    List<MovieResponse> getMoviesByDate(LocalDate date);
     List<MovieResponse> getMoviesByRoomId(Integer roomId);
     List<MovieResponse> getNowShowingMovies();
     List<MovieResponse> getUpcomingMovies();

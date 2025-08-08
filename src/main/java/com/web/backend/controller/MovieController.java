@@ -9,9 +9,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -82,6 +85,14 @@ public class MovieController {
             @RequestParam(required = false) List<Integer> genreIds) {
         return ApiResponse.<List<MovieResponse>>builder()
                 .result(movieService.searchMovies(query, cinemaId, genreIds))
+                .build();
+    }
+
+    @GetMapping("/search-by-date")
+    public ApiResponse<List<MovieResponse>> getMoviesByDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ApiResponse.<List<MovieResponse>>builder()
+                .result(movieService.getMoviesByDate(date))
                 .build();
     }
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -194,6 +195,21 @@ public class MovieServiceImpl implements MovieService {
                             .anyMatch(genre -> genreIdSet.contains(genre.getId())))
                     .collect(Collectors.toList());
         }
+
+        return movies.stream()
+                .map(this::mapMovieToResponseWithStatus)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieResponse> getMoviesByDate(LocalDate date) {
+        LocalDateTime from = date.atStartOfDay();
+        LocalDateTime to = date.plusDays(1).atStartOfDay().minusSeconds(1);
+
+        Set<Movie> movies = showtimeRepository.findAll().stream()
+                .filter(showtime -> !showtime.getStartTime().isBefore(from) && !showtime.getStartTime().isAfter(to))
+                .map(Showtime::getMovie)
+                .collect(Collectors.toSet());
 
         return movies.stream()
                 .map(this::mapMovieToResponseWithStatus)
