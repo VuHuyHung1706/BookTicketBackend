@@ -1,6 +1,7 @@
 package com.web.backend.service.showtime;
 
 import com.web.backend.dto.request.showtime.ShowtimeRequest;
+import com.web.backend.dto.response.ApiResponse;
 import com.web.backend.dto.response.seat.SeatResponse;
 import com.web.backend.dto.response.showtime.ShowtimeResponse;
 import com.web.backend.dto.response.ticket.TicketResponse;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ShowtimeService {
@@ -23,4 +26,5 @@ public interface ShowtimeService {
     List<ShowtimeResponse> getShowtimesByMovieAndRoom(Integer movieId, Integer roomId);
     List<TicketResponse> getBookedTickets(Integer id);
     List<ShowtimeResponse> getShowtimesShowing();
+    List<ShowtimeResponse> getShowtimesByDateAndRoomId(LocalDate date, Integer roomId);
 }

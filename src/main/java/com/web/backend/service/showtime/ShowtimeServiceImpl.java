@@ -254,5 +254,14 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 .map(showtimeMapper::toShowtimeResponse)
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<ShowtimeResponse> getShowtimesByDateAndRoomId(LocalDate date, Integer roomId)
+    {
+        List<Showtime> showtimes = showtimeRepository.findShowtimesByDateAndRoom(date, roomId);
+        return showtimes.stream()
+                .map(showtimeMapper::toShowtimeResponse)
+                .collect(Collectors.toList());
+    };
+
 
 }
