@@ -82,19 +82,14 @@ public class MovieController {
     public ApiResponse<List<MovieResponse>> searchMovieAdvanced(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Integer cinemaId,
-            @RequestParam(required = false) List<Integer> genreIds) {
+            @RequestParam(required = false) List<Integer> genreIds,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
         return ApiResponse.<List<MovieResponse>>builder()
-                .result(movieService.searchMovies(query, cinemaId, genreIds))
+                .result(movieService.searchMovies(query, cinemaId, genreIds, date))
                 .build();
     }
 
-    @GetMapping("/search-by-date")
-    public ApiResponse<List<MovieResponse>> searchMoviesByDate(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ApiResponse.<List<MovieResponse>>builder()
-                .result(movieService.searchMoviesByDate(date))
-                .build();
-    }
 
     @GetMapping("/room/{roomId}")
     public ApiResponse<List<MovieResponse>> getMoviesByRoomId(@PathVariable Integer roomId) {

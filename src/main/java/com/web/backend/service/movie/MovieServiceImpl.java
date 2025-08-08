@@ -150,7 +150,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponse> searchMovies(String query, Integer cinemaId, List<Integer> genreIds) {
+    public List<MovieResponse> searchMovies(String query, Integer cinemaId, List<Integer> genreIds, LocalDate date) {
         List<Movie> movies = movieRepository.findAll();
 
         // Filter by title or actor name
@@ -196,20 +196,20 @@ public class MovieServiceImpl implements MovieService {
                     .collect(Collectors.toList());
         }
 
-        return movies.stream()
-                .map(this::mapMovieToResponseWithStatus)
-                .collect(Collectors.toList());
-    }
+        // --- Filter by date
+        if (date != null) {
+            LocalDateTime from = date.atStartOfDay();
+            LocalDateTime to = date.plusDays(1).atStartOfDay().minusSeconds(1);
 
-    @Override
-    public List<MovieResponse> searchMoviesByDate(LocalDate date) {
-        LocalDateTime from = date.atStartOfDay();
-        LocalDateTime to = date.plusDays(1).atStartOfDay().minusSeconds(1);
+            Set<Integer> movieIdsOnDate = showtimeRepository.findAll().stream()
+                    .filter(showtime -> !showtime.getStartTime().isBefore(from) && !showtime.getStartTime().isAfter(to))
+                    .map(showtime -> showtime.getMovie().getId())
+                    .collect(Collectors.toSet());
 
-        Set<Movie> movies = showtimeRepository.findAll().stream()
-                .filter(showtime -> !showtime.getStartTime().isBefore(from) && !showtime.getStartTime().isAfter(to))
-                .map(Showtime::getMovie)
-                .collect(Collectors.toSet());
+            movies = movies.stream()
+                    .filter(movie -> movieIdsOnDate.contains(movie.getId()))
+                    .collect(Collectors.toList());
+        }
 
         return movies.stream()
                 .map(this::mapMovieToResponseWithStatus)
