@@ -89,10 +89,10 @@ public class MovieController {
     }
 
     @GetMapping("/search-by-date")
-    public ApiResponse<List<MovieResponse>> getMoviesByDate(
+    public ApiResponse<List<MovieResponse>> searchMoviesByDate(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ApiResponse.<List<MovieResponse>>builder()
-                .result(movieService.getMoviesByDate(date))
+                .result(movieService.searchMoviesByDate(date))
                 .build();
     }
 

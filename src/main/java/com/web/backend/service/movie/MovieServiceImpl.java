@@ -202,7 +202,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponse> getMoviesByDate(LocalDate date) {
+    public List<MovieResponse> searchMoviesByDate(LocalDate date) {
         LocalDateTime from = date.atStartOfDay();
         LocalDateTime to = date.plusDays(1).atStartOfDay().minusSeconds(1);
 
