@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -118,4 +119,14 @@ public class ShowtimeController {
                 .result(showtimeService.getBookedTickets(id))
                 .build();
     }
+
+    @PostMapping("/search-by-date-and-room")
+    public ApiResponse<List<ShowtimeResponse>> searchShowtimesByDateAndRoom(
+            @Valid @RequestBody ShowtimeRequest request
+    ) {
+        return ApiResponse.<List<ShowtimeResponse>>builder()
+                .result(showtimeService.getShowtimesByDateAndRoomId(request.getStartTime().toLocalDate(), request.getRoomId()))
+                .build();
+    }
+
 }
