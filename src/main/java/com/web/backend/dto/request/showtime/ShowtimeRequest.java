@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ShowtimeRequest {
 
-    @NotNull(message = "MOVIE_ID_NOT_NULL")
     private Integer movieId;
 
     @NotNull(message = "ROOM_ID_NOT_NULL")

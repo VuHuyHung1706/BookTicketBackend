@@ -1,0 +1,43 @@
+# Ignore everything
+*
+
+# But NOT these files/folders
+!pom.xml
+!src/
+!src/**
+!db/**
+
+# Ignore build output folders
+target/
+**/target/
+build/
+**/build/
+
+# Ignore IDE files
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
