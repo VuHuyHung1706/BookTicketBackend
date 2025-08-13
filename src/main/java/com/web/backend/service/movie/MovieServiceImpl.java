@@ -227,8 +227,9 @@ public class MovieServiceImpl implements MovieService {
                 .map(Showtime::getMovie)
                 .toList();
 
+
         return movies.stream()
-                .map(movieMapper::toMovieResponse)
+                .map(this::mapMovieToResponseWithStatus)
                 .collect(Collectors.toList());
     }
 
