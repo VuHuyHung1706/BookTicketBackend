@@ -151,6 +151,8 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieResponse> searchMovies(String query, Integer cinemaId, List<Integer> genreIds, LocalDate date) {
+        LocalDateTime now = LocalDateTime.now();
+
         List<Movie> movies = movieRepository.findAll();
 
         // Filter by title or actor name
@@ -179,6 +181,7 @@ public class MovieServiceImpl implements MovieService {
             }
             List<Showtime> showtimesAtCinema = showtimeRepository.findByRoomCinemaId(cinemaId);
             Set<Integer> movieIdsAtCinema = showtimesAtCinema.stream()
+                    .filter(showtime -> showtime.getStartTime().isAfter(now) || showtime.getEndTime().isAfter(now))
                     .map(Showtime::getMovieId)
                     .collect(Collectors.toSet());
 
@@ -218,12 +221,15 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieResponse> getMoviesByRoomId(Integer roomId) {
+        LocalDateTime now = LocalDateTime.now();
+
         if (!roomRepository.existsById(roomId)) {
             throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
         }
 
         List<Movie> movies = showtimeRepository.findByRoomId(roomId)
-                .stream()
+                .stream().distinct()
+                .filter(showtime -> showtime.getStartTime().isAfter(now) || showtime.getEndTime().isAfter(now))
                 .map(Showtime::getMovie)
                 .toList();
 
