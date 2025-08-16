@@ -10,6 +10,8 @@ import com.web.backend.repository.RoomRepository;
 import com.web.backend.repository.CinemaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,12 @@ public class RoomServiceImpl implements RoomService {
                 .stream()
                 .map(roomMapper::toRoomResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<RoomResponse> getAllRooms(Pageable pageable) {
+        return roomRepository.findAll(pageable)
+                .map(roomMapper::toRoomResponse);
     }
 
     @Override
