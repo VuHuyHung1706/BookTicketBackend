@@ -61,7 +61,6 @@ public class TicketController {
     }
 
     @GetMapping("/showtime/{showtimeId}")
-    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse<List<TicketDetailResponse>> getTicketsByShowtime(@PathVariable Integer showtimeId) {
         return ApiResponse.<List<TicketDetailResponse>>builder()
                 .result(ticketService.getTicketsByShowtime(showtimeId))

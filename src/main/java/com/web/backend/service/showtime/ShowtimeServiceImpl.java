@@ -180,7 +180,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
         return showtimeRepository.findByMovieId(movieId)
                 .stream()
-                .filter(showtime -> (showtime.getStartTime().isEqual(now) || showtime.getStartTime().isAfter(now)))
+                .filter(showtime -> (showtime.getStartTime().isEqual(now) || showtime.getStartTime().isAfter(now)) || showtime.getEndTime().isAfter(now))
                 .map(showtimeMapper::toShowtimeResponse)
                 .collect(Collectors.toList());
     }
