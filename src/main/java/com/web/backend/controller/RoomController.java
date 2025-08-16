@@ -7,6 +7,8 @@ import com.web.backend.service.room.RoomService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +22,17 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ApiResponse<List<RoomResponse>> getAllRooms() {
         return ApiResponse.<List<RoomResponse>>builder()
                 .result(roomService.getAllRooms())
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<Page<RoomResponse>> getAllRooms(Pageable pageable) {
+        return ApiResponse.<Page<RoomResponse>>builder()
+                .result(roomService.getAllRooms(pageable))
                 .build();
     }
 
