@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/bookticket
+    url: jdbc:mysql://172.17.0.2:3306/bookticket
     username: root
-    password: 270701
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
