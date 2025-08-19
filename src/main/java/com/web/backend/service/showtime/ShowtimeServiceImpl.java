@@ -84,18 +84,25 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
 
             // Calculate end time based on movie duration
-        LocalDateTime endTime = request.getStartTime().plusMinutes(movie.getDuration());
+        LocalDateTime endTimeOnMovie = request.getStartTime().plusMinutes(movie.getDuration());
+
+        if (request.getEndTime() == null) {
+            request.setEndTime(endTimeOnMovie);
+        }
+        else if (request.getEndTime().isBefore(endTimeOnMovie)) {
+            throw new AppException(ErrorCode.INVALID_KEY);
+        }
 
         // Check for conflicting showtimes in the same room
         List<Showtime> conflictingShowtimes = showtimeRepository.findConflictingShowtimes(
-                request.getRoomId(), request.getStartTime(), endTime);
+                request.getRoomId(), request.getStartTime(), request.getEndTime());
 
         if (!conflictingShowtimes.isEmpty()) {
             throw new AppException(ErrorCode.INVALID_KEY); // You might want to create a specific error for this
         }
 
         Showtime showtime = showtimeMapper.toShowtime(request);
-        showtime.setEndTime(endTime);
+        showtime.setEndTime(request.getEndTime());
 
         showtime = showtimeRepository.save(showtime);
         return showtimeMapper.toShowtimeResponse(showtime);
