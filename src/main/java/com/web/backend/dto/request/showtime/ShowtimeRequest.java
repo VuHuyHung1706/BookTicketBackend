@@ -22,5 +22,7 @@ public class ShowtimeRequest {
     @NotNull(message = "START_TIME_NOT_NULL")
     private LocalDateTime startTime;
 
+    private LocalDateTime endTime;
+
     private Integer ticketPrice;
 }
